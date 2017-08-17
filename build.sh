@@ -36,6 +36,8 @@ ${TMP_DIR}/sbin/apk.static --repository $REPO --update-cache --root $TMP_ROOTFS 
 echo "Configure repository"
 echo "$REPO" > $TMP_ROOTFS/etc/apk/repositories
 
+echo "Add cots to /cots"
+cp -rfv cots TMP_ROOTFS/cots
 
 echo "Create alpine-rootfs.tgz"
 # Check if runned only to generate Docker build environment
