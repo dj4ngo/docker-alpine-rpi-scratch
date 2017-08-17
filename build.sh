@@ -1,7 +1,5 @@
 #!/bin/bash 
 
-
-
 # Test root user
 if [ "$(id -u)" -ne 0 ]; then 
 	echo "$0 needs to be runned as root ! " >&2
