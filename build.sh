@@ -1,5 +1,7 @@
 #!/bin/bash 
 
+
+
 # Test root user
 if [ "$(id -u)" -ne 0 ]; then 
 	echo "$0 needs to be runned as root ! " >&2
@@ -14,6 +16,7 @@ RELEASE="latest-stable"
 REPO="${MIRROR}/${RELEASE}/main"
 ARCH="armhf"
 TAG="sboyron/alpine-armhf"
+DOCKER_BUILD="dockerBuild"
 
 ### MAIN ###
 
@@ -21,6 +24,7 @@ echo "Prepare build env"
 echo "  create ${TMP_DIR} ${TMP_ROOTFS}"
 mkdir -p ${TMP_DIR}
 mkdir -p ${TMP_ROOTFS}
+mkdir -p ${DOCKER_BUILD}
 # clean
 trap "rm -rf ${TMP_DIR} ${TMP_ROOTFS}" EXIT TERM INT
 
@@ -35,10 +39,15 @@ echo "Configure repository"
 echo "$REPO" > $TMP_ROOTFS/etc/apk/repositories
 
 
-echo "Create alpine-rootfs.tar and import in Dockerfile"
-image_id=$(tar --numeric-owner -C $TMP_ROOTFS -c .  | docker import - ${TAG}:${RELEASE})
-docker tag $image_id ${TAG}:latest
-
-echo "Alpine imported : ${TAG}:latest"
+echo "Create alpine-rootfs.tgz"
+# Check if runned only to generate Docker build environment
+if [ "$1" == "genDocker" ]; then 
+	tar --numeric-owner -C $TMP_ROOTFS -zcvf ${DOCKER_BUILD}/rootfs.tgz .
+else
+	echo "Import in Dockerfile"
+	image_id=$(tar --numeric-owner -C $TMP_ROOTFS -c .  | docker import - ${TAG}:${RELEASE})
+	docker tag $image_id ${TAG}:latest
+	echo "Alpine imported : ${TAG}:latest"
+fi
 
 
