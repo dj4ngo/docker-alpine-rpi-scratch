@@ -13,7 +13,7 @@ MIRROR="http://nl.alpinelinux.org/alpine"
 RELEASE="latest-stable"
 REPO="${MIRROR}/${RELEASE}/main"
 ARCH="armhf"
-TAG="sboyron/alpine-armhf"
+TAG="dj4ngo/alpine-rpi"
 DOCKER_BUILD="dockerBuild"
 
 ### MAIN ###
