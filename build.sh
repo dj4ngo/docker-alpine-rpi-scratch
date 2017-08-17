@@ -36,8 +36,15 @@ ${TMP_DIR}/sbin/apk.static --repository $REPO --update-cache --root $TMP_ROOTFS 
 echo "Configure repository"
 echo "$REPO" > $TMP_ROOTFS/etc/apk/repositories
 
+### TODO: directly compile qemu for more transparency 
+#echo "Compile qemu-arm"
+#git clone git://git.qemu.org/qemu.git  
+#cd qemu  
+#./configure --target-list=arm-linux-user --static
+#make  
+
 echo "Add cots to /cots"
-cp -rfv cots TMP_ROOTFS/cots
+cp -rfv cots $TMP_ROOTFS/cots
 
 echo "Create alpine-rootfs.tgz"
 # Check if runned only to generate Docker build environment
