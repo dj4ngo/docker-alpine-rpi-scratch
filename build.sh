@@ -23,6 +23,7 @@ echo "  create ${TMP_DIR} ${TMP_ROOTFS}"
 mkdir -p ${TMP_DIR}
 mkdir -p ${TMP_ROOTFS}
 mkdir -p ${DOCKER_BUILD}
+apt-get install qemu-user-static
 # clean
 trap "rm -rf ${TMP_DIR} ${TMP_ROOTFS}" EXIT TERM INT
 

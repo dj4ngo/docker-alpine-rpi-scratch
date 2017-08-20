@@ -1,5 +1,5 @@
 language: c
-sudo: true
+sudo: enabled
 dist: trusty
 script: sudo ./build.sh
 group: stable
