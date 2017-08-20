@@ -23,17 +23,17 @@ echo "  create ${TMP_DIR} ${TMP_ROOTFS}"
 mkdir -p ${TMP_DIR}
 mkdir -p ${TMP_ROOTFS}
 mkdir -p ${DOCKER_BUILD}
-apt-get install qemu-user-static
 # clean
 trap "rm -rf ${TMP_DIR} ${TMP_ROOTFS}" EXIT TERM INT
 
-apk_version=$(curl -s $REPO/$ARCH/APKINDEX.tar.gz | tar -Oxz | sed -n '/apk-tools-static/{n;s/V://p}')
+apk_version=$(curl -s $REPO/$(uname -m)/APKINDEX.tar.gz | tar -Oxz | sed -n '/apk-tools-static/{n;s/V://p}')
 echo "  APK version=$apk_version"
-curl -s ${REPO}/${ARCH}/apk-tools-static-${apk_version}.apk | tar -xz -C $TMP_DIR sbin/apk.static 2>/dev/null
+curl -s ${REPO}/$(uname -m)/apk-tools-static-${apk_version}.apk | tar -xz -C $TMP_DIR sbin/apk.static 2>/dev/null
 
 echo "Create Base rootfs"
-${TMP_DIR}/sbin/apk.static --repository $REPO --update-cache --root $TMP_ROOTFS --initdb add alpine-base --allow-untrusted
+${TMP_DIR}/sbin/apk.static -v --arch $ARCH --repository $REPO --update-cache --root $TMP_ROOTFS --initdb add alpine-base --allow-untrusted --purge
 
+ls -l $TMP_ROOTFS/bin
 echo "Configure repository"
 echo "$REPO" > $TMP_ROOTFS/etc/apk/repositories
 
