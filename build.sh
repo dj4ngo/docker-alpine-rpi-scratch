@@ -1,4 +1,4 @@
-#!/bin/bash 
+#!/bin/bash -e
 
 # Test root user
 if [ "$(id -u)" -ne 0 ]; then 
@@ -31,7 +31,7 @@ echo "  APK version=$apk_version"
 curl -s ${REPO}/$(uname -m)/apk-tools-static-${apk_version}.apk | tar -xz -C $TMP_DIR sbin/apk.static 2>/dev/null
 
 echo "Create Base rootfs"
-${TMP_DIR}/sbin/apk.static -v --arch $ARCH --repository $REPO --update-cache --root $TMP_ROOTFS --initdb add alpine-base --allow-untrusted --purge
+${TMP_DIR}/sbin/apk.static -v --arch $ARCH --repository $REPO --update-cache --root $TMP_ROOTFS --initdb add alpine-base --allow-untrusted --purge --no-progress
 
 ls -l $TMP_ROOTFS/bin
 echo "Configure repository"
