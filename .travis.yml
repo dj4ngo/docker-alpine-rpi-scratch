@@ -1,4 +1,6 @@
 language: c
 sudo: true
 dist: trusty
-script: ./build.sh
+script: sudo ./build.sh
+group: stable
+os: linux
