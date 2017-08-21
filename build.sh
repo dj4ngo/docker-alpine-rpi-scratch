@@ -61,7 +61,7 @@ function install_resin-xbuild () {
 
 	echo "-> Install resin-xbuild"
 	echo "---> Check qemu-user-static is installed or install it"
-	which qemu-arm-static 2>/dev/null || apt-get install qemu-user-static
+	which qemu-arm-static 2>/dev/null || apt-get install qemu binfmt-support qemu-user-static
 
 	echo "---> Create /usr/bin and /bin"
 	mkdir -p $TMP_ROOTFS/{usr/,}bin
