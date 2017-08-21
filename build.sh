@@ -45,6 +45,8 @@ function get_apk_static () {
 
 function compile_resin-xbuild () {
 	echo "-> Compile resin-xbuild"
+	echo "---> Check go is installed, or install it"
+	which go 2>/dev/null || apt-get install golang
 	echo "---> Get resin-xbuild from https://github.com/resin-io-projects/armv7hf-debian-qemu"
 	mkdir -p ${TMP_DIR}/resin-xbuild
 	pushd ${TMP_DIR}/resin-xbuild
