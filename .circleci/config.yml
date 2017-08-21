@@ -2,7 +2,7 @@ version: 2
 jobs:
    build:
      docker:
-       - image: ccircleci/python:latest
+       - image: circleci/python:latest
      steps:
        - checkout
        - run: ./build.sh
