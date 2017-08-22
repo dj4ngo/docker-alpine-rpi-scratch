@@ -26,31 +26,6 @@ function test_root_user () {
 
 function install_dep () {
 	echo "-> Install dependencies for build"
-	source /etc/lsb-release
-
-	cat <<EOF >/etc/apt/sources.list
-deb http://archive.ubuntu.com/ubuntu/ ${DISTRIB_CODENAME} main restricted universe multiverse
-deb-src http://archive.ubuntu.com/ubuntu/ ${DISTRIB_CODENAME} main restricted universe multiverse
-
-deb http://archive.ubuntu.com/ubuntu/ ${DISTRIB_CODENAME}-updates main restricted universe multiverse
-deb-src http://archive.ubuntu.com/ubuntu/ ${DISTRIB_CODENAME}-updates main restricted universe multiverse
-
-deb http://archive.ubuntu.com/ubuntu/ ${DISTRIB_CODENAME}-backports restricted main multiverse universe
-deb-src http://archive.ubuntu.com/ubuntu/ ${DISTRIB_CODENAME}-backports main restricted universe multiverse
-
-deb http://archive.ubuntu.com/ubuntu/ ${DISTRIB_CODENAME}-proposed restricted main multiverse universe
-deb-src http://archive.ubuntu.com/ubuntu/ ${DISTRIB_CODENAME}-proposed restricted main multiverse universe
-
-deb http://security.ubuntu.com/ubuntu ${DISTRIB_CODENAME}-security main restricted universe multiverse
-deb-src http://security.ubuntu.com/ubuntu ${DISTRIB_CODENAME}-security main restricted universe multiverse
-
-deb http://archive.canonical.com/ubuntu ${DISTRIB_CODENAME} partner
-deb-src http://archive.canonical.com/ubuntu ${DISTRIB_CODENAME} partner
-
-deb http://extras.ubuntu.com/ubuntu ${DISTRIB_CODENAME} main
-deb-src http://extras.ubuntu.com/ubuntu ${DISTRIB_CODENAME} main
-EOF
-
 	apt-get update
 	apt-cache search golang
 	apt-get install -y  curl golang qemu-user-static
