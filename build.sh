@@ -49,12 +49,20 @@ function get_apk_static () {
 
 function compile_resin-xbuild () {
 	echo "-> Compile resin-xbuild"
-	echo "---> Check go is installed or install it"
 	echo "---> Get resin-xbuild from https://github.com/resin-io-projects/armv7hf-debian-qemu"
 	mkdir -p ${TMP_DIR}/resin-xbuild
 	pushd ${TMP_DIR}/resin-xbuild
 	curl "https://raw.githubusercontent.com/resin-io-projects/armv7hf-debian-qemu/master/resin-xbuild.go" -o resin-xbuild.go
 	echo "---> Compile resin-xbuild"
+	go env
+	go list
+	go get os
+	go get os/exec
+	go get log
+	go get runtime
+	go get syscall
+	go list
+	go env
 	go build -ldflags "-w -s" resin-xbuild.go
 	popd
 
@@ -63,9 +71,6 @@ function compile_resin-xbuild () {
 function install_resin-xbuild () {
 
 	echo "-> Install resin-xbuild"
-	echo "---> Check qemu-user-static is installed or install it"
-	which qemu-arm-static 2>/dev/null || apt-get install qemu binfmt-support qemu-user-static
-
 	echo "---> Create /usr/bin and /bin"
 	mkdir -p $TMP_ROOTFS/{usr/,}bin
 
