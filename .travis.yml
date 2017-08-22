@@ -1,4 +1,5 @@
-language: c
+language: go
+go: master
 sudo: enabled
 dist: precise
 script: sudo ./build.sh
