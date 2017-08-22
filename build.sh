@@ -58,10 +58,12 @@ function compile_resin-xbuild () {
 	echo "---> Compile resin-xbuild"
 	dpkg -L golang-go-linux-amd64 
 	go env
-	go list
-	go install
-	go list
+	export GOPATH=""
+	export GOROOT="/usr/lib/go"
+	export GOTOOLDIR="/usr/lib/go/pkg/tool/linux_amd64"
+	echo "########################"
 	go env
+
 	go build -ldflags "-w -s" resin-xbuild.go
 	popd
 	set -e
