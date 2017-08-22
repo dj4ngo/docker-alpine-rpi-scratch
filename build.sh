@@ -56,7 +56,7 @@ function compile_resin-xbuild () {
 	pushd ${TMP_DIR}/resin-xbuild
 	curl "https://raw.githubusercontent.com/resin-io-projects/armv7hf-debian-qemu/master/resin-xbuild.go" -o resin-xbuild.go
 	echo "---> Compile resin-xbuild"
-	dpkg -L golang-go
+	dpkg -L golang-go-linux-amd64 
 	go env
 	go list
 	go install
