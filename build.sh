@@ -4,16 +4,17 @@
 
 
 ### ENV VARS ###
-#TMP_DIR="/tmp/alpine-tmp-$$"
-TMP_DIR="alpine-tmp"
-#TMP_ROOTFS="/tmp/alpine-rootfs-$$"
-TMP_ROOTFS="alpine-rootfs"
+TMP_DIR="/tmp/alpine-tmp-$$"
+TMP_ROOTFS="/tmp/alpine-rootfs-$$"
 MIRROR="http://nl.alpinelinux.org/alpine"
 RELEASE="latest-stable"
 REPO="${MIRROR}/${RELEASE}/main"
 ARCH="armhf"
 TAG="dj4ngo/alpine-rpi"
 DOCKER_BUILD="dockerBuild"
+export GOPATH=""
+export GOROOT="/usr/lib/go"
+export GOTOOLDIR="/usr/lib/go/pkg/tool/linux_amd64"
 
 
 function test_root_user () {
@@ -27,7 +28,6 @@ function test_root_user () {
 function install_dep () {
 	echo "-> Install dependencies for build"
 	apt-get update
-	apt-cache search golang
 	apt-get install -y  curl golang qemu-user-static
 }
 
@@ -37,8 +37,6 @@ function create_arbo () {
 	mkdir -p ${TMP_DIR}
 	mkdir -p ${TMP_ROOTFS}
 	mkdir -p ${DOCKER_BUILD}
-	# clean
-	trap "rm -rf ${TMP_DIR} ${TMP_ROOTFS}" EXIT TERM INT
 }
 
 function get_apk_static () {
@@ -49,24 +47,15 @@ function get_apk_static () {
 }
 
 function compile_resin-xbuild () {
-	set +e
 	echo "-> Compile resin-xbuild"
 	echo "---> Get resin-xbuild from https://github.com/resin-io-projects/armv7hf-debian-qemu"
 	mkdir -p ${TMP_DIR}/resin-xbuild
 	pushd ${TMP_DIR}/resin-xbuild
 	curl "https://raw.githubusercontent.com/resin-io-projects/armv7hf-debian-qemu/master/resin-xbuild.go" -o resin-xbuild.go
 	echo "---> Compile resin-xbuild"
-	dpkg -L golang-go-linux-amd64 
-	go env
-	export GOPATH=""
-	export GOROOT="/usr/lib/go"
-	export GOTOOLDIR="/usr/lib/go/pkg/tool/linux_amd64"
-	echo "########################"
-	go env
 
 	go build -ldflags "-w -s" resin-xbuild.go
 	popd
-	set -e
 }
 
 function install_resin-xbuild () {
@@ -131,19 +120,51 @@ function import_in_docker () {
 	docker tag $image_id ${TAG}:latest
 	echo "Alpine imported : ${TAG}:latest"
 }
+
+
+function test_docker_build () {
+ : TODO
+}
+
+function test_docker_use_img () {
+ : TODO
+}
+
+function deploy_on_github () {
+ : TODO
+}
+
+
 ### MAIN ###
 
+	# clean
+	#trap "rm -rf ${TMP_DIR} ${TMP_ROOTFS}" EXIT TERM INT
+
 test_root_user
-install_dep
-create_arbo
-get_apk_static
-compile_resin-xbuild
-install_resin-xbuild
-install_rootfs
-if [ "$1" == "import" ]; then 
-	import_in_docker
-else
-	generate_tgz
-fi
+
+case $1 in
+	prepare)
+		install_dep
+		create_arbo
+		get_apk_static
+	;;
+	build)
+		compile_resin-xbuild
+		install_resin-xbuild
+		install_rootfs
+	;;
+	test)
+		test_docker_build
+		test_docker_use_img
+	;;
+	deploy)
+		deploy_on_github
+	;;
+	*)
+		usage
+	;;
+esac
+
+
 
 
