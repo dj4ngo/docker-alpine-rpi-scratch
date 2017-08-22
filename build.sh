@@ -16,7 +16,6 @@ TAG="dj4ngo/alpine-rpi"
 DOCKER_BUILD="dockerBuild"
 
 
-
 function test_root_user () {
 	echo "-> Test root user"
 	if [ "$(id -u)" -ne 0 ]; then 
@@ -25,6 +24,10 @@ function test_root_user () {
 	fi 
 }
 
+function install_dep () {
+	echo "-> Install dependencies for build"
+	apt-get install curl golang qemu-arm-static
+}
 
 function create_arbo () {
 	echo "-> Prepare build env"
@@ -46,7 +49,6 @@ function get_apk_static () {
 function compile_resin-xbuild () {
 	echo "-> Compile resin-xbuild"
 	echo "---> Check go is installed or install it"
-	which go 2>/dev/null || apt-get install golang
 	echo "---> Get resin-xbuild from https://github.com/resin-io-projects/armv7hf-debian-qemu"
 	mkdir -p ${TMP_DIR}/resin-xbuild
 	pushd ${TMP_DIR}/resin-xbuild
@@ -125,6 +127,7 @@ function import_in_docker () {
 ### MAIN ###
 
 test_root_user
+install_dep
 create_arbo
 get_apk_static
 compile_resin-xbuild
