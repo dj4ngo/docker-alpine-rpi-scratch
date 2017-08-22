@@ -49,6 +49,7 @@ function get_apk_static () {
 }
 
 function compile_resin-xbuild () {
+	set +e
 	echo "-> Compile resin-xbuild"
 	echo "---> Get resin-xbuild from https://github.com/resin-io-projects/armv7hf-debian-qemu"
 	mkdir -p ${TMP_DIR}/resin-xbuild
@@ -57,16 +58,12 @@ function compile_resin-xbuild () {
 	echo "---> Compile resin-xbuild"
 	go env
 	go list
-	go get os
-	go get os/exec
-	go get log
-	go get runtime
-	go get syscall
+	go install
 	go list
 	go env
 	go build -ldflags "-w -s" resin-xbuild.go
 	popd
-
+	set -e
 }
 
 function install_resin-xbuild () {
