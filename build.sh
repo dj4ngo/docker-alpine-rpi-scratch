@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/bin/bash -xe
 
 #TODO : add keys for apk
 
@@ -27,6 +27,7 @@ function test_root_user () {
 function install_dep () {
 	echo "-> Install dependencies for build"
 	apt-get update
+	apt-cache search golang
 	apt-get install -y  curl golang qemu-user-static
 }
 
