@@ -27,7 +27,7 @@ function test_root_user () {
 function install_dep () {
 	echo "-> Install dependencies for build"
 	apt-get update
-	apt-get install -y  curl golang qemu-arm-static
+	apt-get install -y  curl golang qemu-user-static
 }
 
 function create_arbo () {
