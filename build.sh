@@ -128,7 +128,7 @@ function import_in_docker () {
 ### MAIN ###
 
 test_root_user
-#install_dep
+install_dep
 create_arbo
 get_apk_static
 compile_resin-xbuild
