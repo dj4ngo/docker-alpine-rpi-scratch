@@ -13,12 +13,12 @@ install:
   - sudo ./build.sh get_resin-xbuild 
 
 script:
-  - sudo ./build.sh compile_resin-xbuild && \
-	sudo ./build.sh install_resin-xbuild && \
-	sudo ./build.sh install_rootfs && \
-	sudo ./build.sh generate_rootfstgz && \
-	sudo ./build.sh test_docker_build && \
-	sudo ./build.sh test_docker_use_img
+  - sudo ./build.sh compile_resin-xbuild
+  - sudo ./build.sh install_resin-xbuild
+  - sudo ./build.sh install_rootfs
+  - sudo ./build.sh generate_rootfstgz
+  - sudo ./build.sh test_docker_build
+  - sudo ./build.sh test_docker_use_img
 
 #deploy:
 #  provider: releases
