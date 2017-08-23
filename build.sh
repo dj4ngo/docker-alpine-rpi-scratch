@@ -16,6 +16,12 @@ export GOPATH=""
 export GOROOT="/usr/lib/go"
 export GOTOOLDIR="/usr/lib/go/pkg/tool/linux_amd64"
 
+function usage () {
+	cat << EOF
+
+EOF
+}
+
 
 function test_root_user () {
 	echo "-> Test root user"
@@ -134,15 +140,26 @@ function deploy_on_github () {
  : TODO
 }
 
+function mr_proper () {
+	trap "rm -rf ${TMP_DIR} ${TMP_ROOTFS}" EXIT TERM INT
+}
 
 ### MAIN ###
 
-	# clean
-	#trap "rm -rf ${TMP_DIR} ${TMP_ROOTFS}" EXIT TERM INT
+# clean
 
 test_root_user
 
 case $1 in
+	localbuild)
+		install_dep
+		create_arbo
+		get_apk_static
+		compile_resin-xbuild
+		install_resin-xbuild
+		install_rootfs
+		mr_proper
+	;;
 	prepare)
 		install_dep
 		create_arbo
@@ -160,11 +177,12 @@ case $1 in
 	deploy)
 		deploy_on_github
 	;;
+	clean)
+		mrproper
+	;;
 	*)
 		usage
 	;;
 esac
-
-
 
 

@@ -1,6 +1,15 @@
 language: c
 sudo: enabled
 dist: xenial
-script: sudo ./build.sh
 group: stable
 os: linux
+
+jobs:
+  include:
+    - stage: prepare
+      script: sudo ./build.sh prepare
+    - stage: build
+      script: sudo ./build.sh build
+    - stage: test
+      script: sudo ./build.sh test
+
