@@ -173,10 +173,10 @@ function test_docker_build () {
 function test_docker_use_img () {
 	cat <<EOF > $BUILD_PATH/Dockerfile-docker_use_img-test
 FROM ${TAG}-test
-RUN ["cross-build-start"]
+#RUN ["cross-build-start"]
 RUN ["apk", "update"]
 RUN ["apk", "add", "--update", "python"]
-RUN |"cross-build-end"]
+#RUN |"cross-build-end"]
 CMD ["python", "-c",'print(\"WORKING !!!\"' ]
 EOF
 	
@@ -184,7 +184,8 @@ EOF
 	docker build -t ${TAG}-python -f $BUILD_PATH/Dockerfile-docker_use_img-test $BUILD_PATH
 
 	echo "-> Start the container"
-	docker run -it ${TAG}-python /usr/bin/qemu-arm-static /sbin/apk -e info python
+	#docker run -it ${TAG}-python /usr/bin/qemu-arm-static /sbin/apk -e info python
+	docker run -it ${TAG}-python /usr/bin/qemu-arm-static /usr/bin/python -c 'print("WORKING !!!!")'
 }
 
 function deploy_on_dockerhub () {
