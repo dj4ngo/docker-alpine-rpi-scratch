@@ -58,6 +58,7 @@ function create_arbo () {
 	mkdir -p ${TMP_ROOTFS}
 	mkdir -p ${DOCKER_BUILD}
 	cp Dockerfile ${DOCKER_BUILD}/
+        ls -lr /tmp/a*
 	
 }
 
@@ -66,6 +67,7 @@ function get_apk_static () {
 	echo "-> Install apk.static for $(uname -m)"
 	apk_version=$(curl -s $REPO/$(uname -m)/APKINDEX.tar.gz | tar -Oxz | sed -n '/apk-tools-static/{n;s/V://p}')
 	echo "---> APK version=$apk_version"
+	ls -l /tmp/a*
 	curl -s ${REPO}/$(uname -m)/apk-tools-static-${apk_version}.apk | tar -xz -C $TMP_DIR sbin/apk.static 
 	
 }
