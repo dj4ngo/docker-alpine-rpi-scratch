@@ -158,7 +158,7 @@ CMD ["sh"]
 EOF
 
 	echo "-> Build docker as dockerhub will do"
-	docker build -t ${TAG}-test -f Dockerfile-docker_build-test $BUILD_PATH
+	docker build -t ${TAG}-test -f $BUILD_PATH/Dockerfile-docker_build-test $BUILD_PATH
 
 	echo "-> Start the container"
 	docker run ${TAG}-test /usr/bin/qemu-arm-static /bin/echo 'WORKING !!!'
@@ -176,7 +176,7 @@ CMD ["python", "-c",'print(\"WORKING !!!\"' ]
 EOF
 	
 	echo "-> Build new docker image using generated as base image"
-	docker build -t ${TAG}-python -f Dockerfile-docker_use_img-test $BUILD_PATH
+	docker build -t ${TAG}-python -f $BUILD_PATH/Dockerfile-docker_use_img-test $BUILD_PATH
 
 	echo "-> Start the container"
 	docker run ${TAG}-python /usr/bin/qemu-arm-static /bin/python -c 'print("WORKING !!!")'
