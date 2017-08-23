@@ -133,7 +133,6 @@ function install_rootfs () {
 }
 
 function generate_rootfstgz () {
-	
 	echo "-> Create alpine rootfs.tgz"
 	tar --numeric-owner -C $TMP_ROOTFS -zcf ${BUILD_PATH}/rootfs.tgz .
 
@@ -141,7 +140,7 @@ function generate_rootfstgz () {
 
 
 function import_in_docker () {
-	
+	# Not used anymore, replaced by a local build as dockerhub
 	echo "-> Import in Dockerfile"
 	image_id=$(tar --numeric-owner -C $TMP_ROOTFS -c .  | docker import - ${TAG}:${RELEASE})
 	docker tag $image_id ${TAG}:latest
@@ -149,17 +148,23 @@ function import_in_docker () {
 	
 }
 
-
-function test_docker_build () {
-	cat <<EOF > $BUILD_PATH/Dockerfile-docker_build-test
+function local_build () {
+	tag=$1
+	dockerfile=${2:-$BUILD_PATH/Dockerfile}
+	cat <<EOF > $dockerfile
 FROM scratch
 ADD rootfs.tgz /
 CMD ["sh"]
 EOF
 
-	echo "-> Build docker as dockerhub will do"
-	docker build -t ${TAG}-test -f $BUILD_PATH/Dockerfile-docker_build-test $BUILD_PATH
 
+	echo "-> Build docker as dockerhub will do"
+	docker build -t ${tag}-test -f $dockerfile $BUILD_PATH
+
+}
+
+function test_docker_build () {
+	local_build ${TAG}-test $BUILD_PATH/Dockerfile-docker_build-test
 	echo "-> Start the container"
 	docker run ${TAG}-test /usr/bin/qemu-arm-static /bin/echo 'WORKING !!!'
   
@@ -201,6 +206,7 @@ function local_build () {
 	install_rootfs
 	generate_rootfstgz
 	mr_proper
+	local_build $TAG	
 }
 
 
