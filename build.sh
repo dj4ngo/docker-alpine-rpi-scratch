@@ -153,13 +153,10 @@ function import_in_docker () {
 
 function test_docker_build () {
 	echo "-> Build docker as dockerhub will do"
-	docker build -t $TAG $dockerBuild
+	docker build -t $TAG $DOCKER_BUILD
 
 	echo "-> Start the container"
 	docker run $TAG "cross-build-start; echo 'WORKING !!!'; cross-build-end"
-
-
-
   
 }
 
