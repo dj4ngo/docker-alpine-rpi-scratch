@@ -153,7 +153,7 @@ function import_in_docker () {
 function test_docker_build () {
 	cat <<EOF > $BUILD_PATH/Dockerfile-docker_build-test
 FROM scratch
-COPY $(readlink -f $BUILD_PATH)/rootfs.tgz /
+ADD $(readlink -f $BUILD_PATH)/rootfs.tgz /
 CMD ["sh"]
 EOF
 
