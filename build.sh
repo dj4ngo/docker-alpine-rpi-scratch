@@ -45,7 +45,7 @@ function install_dep () {
 	
 	echo "-> Install dependencies for build"
 	apt-get update -qq
-	apt-get install -y  curl golang qemu-user-static
+	apt-get install -y  curl golang qemu-user-static docker
 	
 }
 
@@ -152,7 +152,15 @@ function import_in_docker () {
 
 
 function test_docker_build () {
- : TODO
+	echo "-> Build docker as dockerhub will do"
+	docker build -t $TAG $dockerBuild
+
+	echo "-> Start the container"
+	docker run $TAG "cross-build-start; echo 'WORKING !!!'; cross-build-end"
+
+
+
+  
 }
 
 function test_docker_use_img () {
