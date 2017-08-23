@@ -58,7 +58,6 @@ function create_arbo () {
 	mkdir -p ${TMP_ROOTFS}
 	mkdir -p ${DOCKER_BUILD}
 	cp Dockerfile ${DOCKER_BUILD}/
-        ls -lr /tmp/a*
 	
 }
 
@@ -183,8 +182,6 @@ function local_build () {
 }
 
 
-# clean
-mr_proper
 
 available_functions="$(typeset -F | sed -n 's/^declare -f \([^_].*\)/\1/p')"
 func_name="$1"
