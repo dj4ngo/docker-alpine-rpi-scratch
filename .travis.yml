@@ -5,10 +5,20 @@ group: stable
 os: linux
 
 before_install:
-  - sudo ./build.sh prepare
+  - sudo ./build.sh install_dep
+
+install:
+  - sudo ./build.sh create_arbo
+  - sudo ./build.sh get_apk_static
+  - sudo ./build.sh get_resin-xbuild 
+
 script:
-  - sudo ./build.sh build
-  - sudo ./build.sh test
+  - sudo ./build.sh compile_resin-xbuild && \
+	sudo ./build.sh install_resin-xbuild && \
+	sudo ./build.sh install_rootfs && \
+	sudo ./build.sh generate_rootfstgz && \
+	sudo ./build.sh test_docker_build && \
+	sudo ./build.sh test_docker_use_img
 
 #deploy:
 #  provider: releases
