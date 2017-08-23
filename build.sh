@@ -148,7 +148,7 @@ function import_in_docker () {
 	
 }
 
-function local_build () {
+function local_docker_build () {
 	tag=$1
 	dockerfile=${2:-$BUILD_PATH/Dockerfile}
 	cat <<EOF > $dockerfile
@@ -159,14 +159,14 @@ EOF
 
 
 	echo "-> Build docker as dockerhub will do"
-	docker build -t ${tag}-test -f $dockerfile $BUILD_PATH
+	docker build -t ${tag} -f $dockerfile $BUILD_PATH
 
 }
 
 function test_docker_build () {
-	local_build ${TAG}-test $BUILD_PATH/Dockerfile-docker_build-test
+	local_docker_build ${TAG}-test $BUILD_PATH/Dockerfile-docker_build-test
 	echo "-> Start the container"
-	docker run ${TAG}-test /usr/bin/qemu-arm-static /bin/echo 'WORKING !!!'
+	docker run -it ${TAG}-test /usr/bin/qemu-arm-static /bin/echo 'WORKING !!!'
   
 }
 
@@ -184,7 +184,7 @@ EOF
 	docker build -t ${TAG}-python -f $BUILD_PATH/Dockerfile-docker_use_img-test $BUILD_PATH
 
 	echo "-> Start the container"
-	docker run ${TAG}-python /usr/bin/qemu-arm-static /bin/apk -e info python
+	docker run -it ${TAG}-python /usr/bin/qemu-arm-static /sbin/apk -e info python
 }
 
 function deploy_on_dockerhub () {
@@ -206,7 +206,7 @@ function local_build () {
 	install_rootfs
 	generate_rootfstgz
 	mr_proper
-	local_build $TAG	
+	local_docker_build $TAG	
 }
 
 
