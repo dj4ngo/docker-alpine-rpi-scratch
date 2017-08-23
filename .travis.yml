@@ -25,3 +25,4 @@ deploy:
   on:
     repo: dj4ngo/docker-rpi-alpine-scratch
     tags: true
+    all_branches: true
