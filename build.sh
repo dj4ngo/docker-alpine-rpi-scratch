@@ -156,7 +156,7 @@ function test_docker_build () {
 	docker build -t $TAG $DOCKER_BUILD
 
 	echo "-> Start the container"
-	docker run $TAG "cross-build-start; echo 'WORKING !!!'; cross-build-end"
+	docker run $TAG /usr/bin/qemu-armhf-static echo 'WORKING !!!'
   
 }
 
