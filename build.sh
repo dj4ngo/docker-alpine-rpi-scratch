@@ -175,6 +175,7 @@ function local_build () {
 	compile_resin-xbuild
 	install_resin-xbuild
 	install_rootfs
+	generate_rootfstgz
 	mr_proper
 }
 
