@@ -179,7 +179,7 @@ EOF
 	docker build -t ${TAG}-python -f $BUILD_PATH/Dockerfile-docker_use_img-test $BUILD_PATH
 
 	echo "-> Start the container"
-	docker run ${TAG}-python /usr/bin/qemu-arm-static /bin/python -c 'print("WORKING !!!")'
+	docker run ${TAG}-python /usr/bin/qemu-arm-static /bin/apk -e info python
 }
 
 function deploy_on_dockerhub () {
