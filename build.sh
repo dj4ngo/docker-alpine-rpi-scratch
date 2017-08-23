@@ -123,9 +123,9 @@ EOF
 function install_rootfs () {
 	
 	echo "-> Install root FS"
-	chroot $TMP_ROOTFS cross-build-start
+	#chroot $TMP_ROOTFS cross-build-start
 	${TMP_DIR}/sbin/apk.static -v --arch $ARCH --repository $REPO --update-cache --root $TMP_ROOTFS --initdb add alpine-base --allow-untrusted --purge --no-progress
-	chroot $TMP_ROOTFS cross-build-end
+	#chroot $TMP_ROOTFS cross-build-end
 	echo "-> Configure repository"
 	echo "$REPO" > $TMP_ROOTFS/etc/apk/repositories
 	
@@ -173,10 +173,10 @@ function test_docker_build () {
 function test_docker_use_img () {
 	cat <<EOF > $BUILD_PATH/Dockerfile-docker_use_img-test
 FROM ${TAG}-test
-RUN cross-build-start
-RUN apk update
-RUN apk add --update python
-RUN cross-build-end
+RUN ["cross-build-start"]
+RUN ["apk", "update"]
+RUN ["apk", "add", "--update", "python"]
+RUN |"cross-build-end"]
 CMD ["python", "-c",'print(\"WORKING !!!\"' ]
 EOF
 	
