@@ -4,12 +4,18 @@ dist: xenial
 group: stable
 os: linux
 
-jobs:
-  include:
-    - stage: prepare
-      script: sudo ./build.sh prepare
-    - stage: build
-      script: sudo ./build.sh build
-    - stage: test
-      script: sudo ./build.sh test
+before_install:
+  - sudo ./build.sh prepare
+script:
+  - sudo ./build.sh build
+  - sudo ./build.sh test
 
+#deploy:
+#  provider: releases
+#  api_key: $GITHUB_OAUTH_TOKEN
+#  file: 
+#    - rootfs.tgz
+#    - Dockerfile
+#  skip_cleanup: true
+#  on:
+#    tags: true

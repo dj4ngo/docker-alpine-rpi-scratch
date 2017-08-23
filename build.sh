@@ -33,7 +33,7 @@ function test_root_user () {
 
 function install_dep () {
 	echo "-> Install dependencies for build"
-	apt-get update
+	apt-get update -qq
 	apt-get install -y  curl golang qemu-user-static
 }
 
@@ -136,7 +136,7 @@ function test_docker_use_img () {
  : TODO
 }
 
-function deploy_on_github () {
+function deploy_on_dockerhub () {
  : TODO
 }
 
@@ -175,7 +175,7 @@ case $1 in
 		test_docker_use_img
 	;;
 	deploy)
-		deploy_on_github
+		deploy_on_dockerhub
 	;;
 	clean)
 		mrproper
