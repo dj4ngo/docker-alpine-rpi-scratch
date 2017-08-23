@@ -11,7 +11,7 @@ RELEASE="latest-stable"
 REPO="${MIRROR}/${RELEASE}/main"
 ARCH="armhf"
 TAG="dj4ngo/alpine-rpi"
-DOCKER_BUILD="dockerBuild"
+BUILD_PATH="dockerBuild"
 export GOPATH=""
 export GOROOT="/usr/lib/go"
 export GOTOOLDIR="/usr/lib/go/pkg/tool/linux_amd64"
@@ -53,11 +53,10 @@ function create_arbo () {
 	
 	echo "-> Prepare build env"
 	echo "---> Create ${TMP_DIR} ${TMP_ROOTFS}" 
-	rm -rf ${TMP_DIR} ${TMP_ROOTFS} ${DOCKER_BUILD}
+	rm -rf ${TMP_DIR} ${TMP_ROOTFS} ${BUILD_PATH}
 	mkdir -p ${TMP_DIR}
 	mkdir -p ${TMP_ROOTFS}
-	mkdir -p ${DOCKER_BUILD}
-	cp Dockerfile ${DOCKER_BUILD}/
+	mkdir -p ${BUILD_PATH}
 	
 }
 
@@ -136,7 +135,7 @@ function install_rootfs () {
 function generate_rootfstgz () {
 	
 	echo "-> Create alpine rootfs.tgz"
-	tar --numeric-owner -C $TMP_ROOTFS -zcf ${DOCKER_BUILD}/rootfs.tgz .
+	tar --numeric-owner -C $TMP_ROOTFS -zcf ${BUILD_PATH}/rootfs.tgz .
 
 }
 
@@ -152,16 +151,35 @@ function import_in_docker () {
 
 
 function test_docker_build () {
+	cat <<EOF > $BUILD_PATH/Dockerfile-docker_build-test
+FROM scratch
+COPY $(readlink -f $BUILD_PATH)/rootfs.tgz
+CMD ["sh"]
+EOF
+
 	echo "-> Build docker as dockerhub will do"
-	docker build -t $TAG $DOCKER_BUILD
+	docker build -t ${TAG}-test -f Dockerfile-docker_build-test $BUILD_PATH
 
 	echo "-> Start the container"
-	docker run $TAG /usr/bin/qemu-arm-static /bin/echo 'WORKING !!!'
+	docker run ${TAG}-test /usr/bin/qemu-arm-static /bin/echo 'WORKING !!!'
   
 }
 
 function test_docker_use_img () {
- : TODO
+	cat <<EOF > $BUILD_PATH/Dockerfile-docker_use_img-test
+FROM ${TAG}-test
+RUN cross-build-start \
+    apk update
+    apk add --update python \
+    cross-build-end
+CMD ["python", "-c",'print(\"WORKING !!!\"' ]
+EOF
+	
+	echo "-> Build new docker image using generated as base image"
+	docker build -t ${TAG}-python -f Dockerfile-docker_use_img-test $BUILD_PATH
+
+	echo "-> Start the container"
+	docker run ${TAG}-python /usr/bin/qemu-arm-static /bin/python -c 'print("WORKING !!!")'
 }
 
 function deploy_on_dockerhub () {

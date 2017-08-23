@@ -1,3 +1,4 @@
 .*.swp
-/dockerBuild
-.
+rootfs.tgz
+Dockerfile-*-test
+dockerBuild
