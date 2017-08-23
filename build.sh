@@ -4,8 +4,8 @@
 
 
 ### ENV VARS ###
-TMP_DIR="/tmp/alpine-tmp-$$"
-TMP_ROOTFS="/tmp/alpine-rootfs-$$"
+TMP_DIR="/tmp/alpine-tmp"
+TMP_ROOTFS="/tmp/alpine-rootfs"
 MIRROR="http://nl.alpinelinux.org/alpine"
 RELEASE="latest-stable"
 REPO="${MIRROR}/${RELEASE}/main"
@@ -53,6 +53,7 @@ function create_arbo () {
 	
 	echo "-> Prepare build env"
 	echo "---> Create ${TMP_DIR} ${TMP_ROOTFS}" 
+	rm -rf ${TMP_DIR} ${TMP_ROOTFS} ${DOCKER_BUILD}
 	mkdir -p ${TMP_DIR}
 	mkdir -p ${TMP_ROOTFS}
 	mkdir -p ${DOCKER_BUILD}
@@ -73,7 +74,7 @@ function get_resin-xbuild () {
 	echo "---> Get resin-xbuild from https://github.com/resin-io-projects/armv7hf-debian-qemu"
 	mkdir -p ${TMP_DIR}/resin-xbuild
 	pushd ${TMP_DIR}/resin-xbuild
-	curl "https://raw.githubusercontent.com/resin-io-projects/armv7hf-debian-qemu/master/resin-xbuild.go" -o resin-xbuild.go
+	curl -s "https://raw.githubusercontent.com/resin-io-projects/armv7hf-debian-qemu/master/resin-xbuild.go" -o resin-xbuild.go
 	popd
 }
 
