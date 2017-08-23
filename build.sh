@@ -123,9 +123,7 @@ EOF
 function install_rootfs () {
 	
 	echo "-> Install root FS"
-	#chroot $TMP_ROOTFS cross-build-start
 	${TMP_DIR}/sbin/apk.static -v --arch $ARCH --repository $REPO --update-cache --root $TMP_ROOTFS --initdb add alpine-base --allow-untrusted --purge --no-progress
-	#chroot $TMP_ROOTFS cross-build-end
 	echo "-> Configure repository"
 	echo "$REPO" > $TMP_ROOTFS/etc/apk/repositories
 	
@@ -184,7 +182,6 @@ EOF
 	docker build -t ${TAG}-python -f $BUILD_PATH/Dockerfile-docker_use_img-test $BUILD_PATH
 
 	echo "-> Start the container"
-	#docker run -it ${TAG}-python /usr/bin/qemu-arm-static /sbin/apk -e info python
 	docker run -it ${TAG}-python /usr/bin/qemu-arm-static /usr/bin/python -c 'print("WORKING !!!!")'
 }
 

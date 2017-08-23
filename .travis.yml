@@ -3,29 +3,23 @@ sudo: enabled
 dist: xenial
 group: stable
 os: linux
-
 before_install:
-  - sudo ./build.sh install_dep
-
+- sudo ./build.sh install_dep
 install:
-  - sudo ./build.sh create_arbo
-  - sudo ./build.sh get_apk_static
-  - sudo ./build.sh get_resin-xbuild 
-
+- sudo ./build.sh create_arbo
+- sudo ./build.sh get_apk_static
+- sudo ./build.sh get_resin-xbuild
 script:
-  - sudo ./build.sh compile_resin-xbuild
-  - sudo ./build.sh install_resin-xbuild
-  - sudo ./build.sh install_rootfs
-  - sudo ./build.sh generate_rootfstgz
-  - sudo ./build.sh test_docker_build
-  - sudo ./build.sh test_docker_use_img
-
-#deploy:
-#  provider: releases
-#  api_key: $GITHUB_OAUTH_TOKEN
-#  file: 
-#    - rootfs.tgz
-#    - Dockerfile
-#  skip_cleanup: true
-#  on:
-#    tags: true
+- sudo ./build.sh compile_resin-xbuild
+- sudo ./build.sh install_resin-xbuild
+- sudo ./build.sh install_rootfs
+- sudo ./build.sh generate_rootfstgz
+- sudo ./build.sh test_docker_build
+- sudo ./build.sh test_docker_use_img
+deploy:
+  provider: releases
+  api_key:
+    secure: WSzYEInOlhwpLfW3j2O+VJb6Lspo9q0SbNg/Py1HdQLV0Nhurere+B4wRLn791ogUELjWLT0CK1xhEI+yFUJ2g6dWiLVVx/oWtvqv6vw0QK4lE3fQkEvay3ubkVIGJyt3tTRzCbUJhflhqzqjUpCbUWJgBPDCa4WWXxK9xi/zJre0Cjw/dhm2MDUyZMgttPigDuQqjdZRG65kFH/UtPg5fNiRsMRE+JWESLAA5zqrprBp1Ji9CV2+0dvDhM0qHy3Z2qv4N+b7eVf+agbTXP4OrDqKhzS+s24KgQq11wUPEKwpiCHcBdnLi9msLloZ81Ztjap1nBL0dou0FGOu1mieFvwWEf63BjGcM185m2u7+KtAH+tWhXfIVt9n1HKmiEsYjVBHbFvBBxo7RaH8MZqO+j2WRLjbK2jKNiecxGpC8G3PZ3ZWBBddyaA9ITXZF0I610jeSK+OCI+FhpsHEDactmjnT62uDfGUmeyhilPJsN/7871lUt1XLoSzxfE2tbd1jM5cou7v6M/UBwghrAIXEzl5cj4+brBNGlqE6M4BF8klZCmh52wlrh2KGLF2he2SbuQhT/vQU97VHrJv9lCfiuGNRxXJrWXMA5JBy8FV4ycBS4xk49zGVzdQPXd9rzJemJc1lKW9ziz79343d04SzD2oXZBdrFSAWixtdaOG9s=
+  file: dockerBuild/rootfs.tgz
+  on:
+    repo: dj4ngo/docker-rpi-alpine-scratch
