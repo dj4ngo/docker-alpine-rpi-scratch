@@ -169,7 +169,7 @@ function test_docker_use_img () {
 	cat <<EOF > $BUILD_PATH/Dockerfile-docker_use_img-test
 FROM ${TAG}-test
 RUN cross-build-start \
-    apk update
+    apk update \
     apk add --update python \
     cross-build-end
 CMD ["python", "-c",'print(\"WORKING !!!\"' ]
