@@ -26,3 +26,9 @@ deploy:
     repo: dj4ngo/docker-rpi-alpine-scratch
     tags: true
     all_branches: true
+ater_deploy:
+  - curl -H "Content-Type: application/json" --data '{"build": true}' -X POST https://registry.hub.docker.com/u/dj4ngo/alpine-rpi/trigger/${DOCKERHUB_TOKEN}/
+  on:
+    tags: true
+    all_branches: true
+  	
