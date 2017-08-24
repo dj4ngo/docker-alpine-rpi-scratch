@@ -185,8 +185,8 @@ EOF
 	docker run -it ${TAG}-python /usr/bin/qemu-arm-static /usr/bin/python -c 'print("WORKING !!!!")'
 }
 
-function deploy_on_dockerhub () {
- : TODO
+function trigger_build_on_dockerhub () {
+	 curl -H "Content-Type: application/json" --data '{"build": true}' -X POST https://registry.hub.docker.com/u/dj4ngo/alpine-rpi/trigger/${DOCKERHUB_TOKEN}/
 }
 
 function mr_proper () {

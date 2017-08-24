@@ -4,18 +4,18 @@ dist: xenial
 group: stable
 os: linux
 before_install:
-- sudo ./build.sh install_dep
+  - sudo ./build.sh install_dep
 install:
-- sudo ./build.sh create_arbo
-- sudo ./build.sh get_apk_static
-- sudo ./build.sh get_resin-xbuild
+  - sudo ./build.sh create_arbo
+  - sudo ./build.sh get_apk_static
+  - sudo ./build.sh get_resin-xbuild
 script:
-- sudo ./build.sh compile_resin-xbuild
-- sudo ./build.sh install_resin-xbuild
-- sudo ./build.sh install_rootfs
-- sudo ./build.sh generate_rootfstgz
-- sudo ./build.sh test_docker_build
-- sudo ./build.sh test_docker_use_img
+  - sudo ./build.sh compile_resin-xbuild
+  - sudo ./build.sh install_resin-xbuild
+  - sudo ./build.sh install_rootfs
+  - sudo ./build.sh generate_rootfstgz
+  - sudo ./build.sh test_docker_build
+  - sudo ./build.sh test_docker_use_img
 deploy:
   provider: releases
   api_key:
@@ -26,8 +26,8 @@ deploy:
     repo: dj4ngo/docker-rpi-alpine-scratch
     tags: true
     all_branches: true
-ater_deploy:
-  - curl -H "Content-Type: application/json" --data '{"build": true}' -X POST https://registry.hub.docker.com/u/dj4ngo/alpine-rpi/trigger/${DOCKERHUB_TOKEN}/
+ater_deploy: 
+  - sudo ./build.sh trigger_build_on_dockerhub
   on:
     tags: true
     all_branches: true
