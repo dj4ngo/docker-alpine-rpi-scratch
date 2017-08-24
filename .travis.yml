@@ -32,5 +32,4 @@ deploy:
     all_branches: true
 
 ater_deploy:
-  - sudo ./build.sh trigger_build_on_dockerhub
-  	
+  - sudo ./build.sh trigger_build_on_dockerhub	
