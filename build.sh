@@ -186,7 +186,7 @@ EOF
 }
 
 function trigger_build_on_dockerhub () {
-	 curl -H "Content-Type: application/json" --data '{"source_type": "Tag", "source_name": "v0.1.16"}' -X POST https://registry.hub.docker.com/u/dj4ngo/alpine-rpi/trigger/${DOCKERHUB_TOKEN}/
+	 curl -H "Content-Type: application/json" --data '{"source_type": "Tag", "source_name": "v0.1.17"}' -X POST https://registry.hub.docker.com/u/dj4ngo/alpine-rpi/trigger/${DOCKERHUB_TOKEN}/
 }
 
 function mr_proper () {
