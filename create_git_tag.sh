@@ -83,4 +83,7 @@ git push --set-upstream origin $version
 echo "-> Merge to branch master"
 git checkout master
 git merge develop
+git push
 git checkout develop
+
+
