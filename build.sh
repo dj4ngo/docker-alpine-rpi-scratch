@@ -103,7 +103,7 @@ function install_resin-xbuild () {
 
 	echo "---> Create sh and sh-shim"
 	cat <<EOF | tee $TMP_ROOTFS/bin/sh > $TMP_ROOTFS/bin/sh-shim
-#!/usr/bin/qemu-arm-static /bin/sh.real
+#!/usr/bin/qemu-arm-static /bin/sh
 
 set -o errexit
 
@@ -153,7 +153,7 @@ function local_docker_build () {
 	cat <<EOF > $dockerfile
 FROM scratch
 ADD rootfs.tgz /
-CMD ["sh"]
+CMD ["/bin/sh"]
 EOF
 
 
@@ -172,11 +172,11 @@ function test_docker_build () {
 function test_docker_use_img () {
 	cat <<EOF > $BUILD_PATH/Dockerfile-docker_use_img-test
 FROM ${TAG}-test
-#RUN ["cross-build-start"]
+RUN ["cross-build-start"]
 RUN ["apk", "update"]
 RUN ["apk", "add", "--update", "python"]
-#RUN |"cross-build-end"]
-CMD ["python", "-c",'print(\"WORKING !!!\"' ]
+RUN ["cross-build-end"]
+CMD ["/usr/bin/python", "-c",'print(\"WORKING !!!\"' ]
 EOF
 	
 	echo "-> Build new docker image using generated as base image"
