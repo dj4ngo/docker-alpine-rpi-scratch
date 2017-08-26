@@ -65,9 +65,11 @@ function get_apk_static () {
 	echo "-> Install apk.static for $(uname -m)"
 	apk_version=$(curl -s $REPO/$(uname -m)/APKINDEX.tar.gz | tar -Oxz | sed -n '/apk-tools-static/{n;s/V://p}')
 	echo "---> APK version=$apk_version"
-	curl -s ${REPO}/$(uname -m)/apk-tools-static-${apk_version}.apk | tar -xz -C $TMP_DIR sbin/apk.static 
+	#curl -s ${REPO}/$(uname -m)/apk-tools-static-${apk_version}.apk | tar -xz -C $TMP_DIR sbin/apk.static 
+	curl -s ${REPO}/$ARCH/apk-tools-static-${apk_version}.apk | tar -xz -C $TMP_DIR sbin/apk.static 
 	
 }
+
 
 function get_resin-xbuild () {
 	echo "---> Get resin-xbuild from https://github.com/resin-io-projects/armv7hf-debian-qemu"
@@ -123,7 +125,7 @@ EOF
 function install_rootfs () {
 	
 	echo "-> Install root FS"
-	${TMP_DIR}/sbin/apk.static -v --arch $ARCH --repository $REPO --update-cache --root $TMP_ROOTFS --initdb add alpine-base --allow-untrusted --purge --no-progress
+	qemu-arm-static  ${TMP_DIR}/sbin/apk.static -v --arch $ARCH --repository $REPO --update-cache --root $TMP_ROOTFS --initdb add alpine-base --allow-untrusted --purge --no-progress
 	echo "-> Configure repository"
 	echo "$REPO" > $TMP_ROOTFS/etc/apk/repositories
 	
@@ -186,7 +188,7 @@ EOF
 }
 
 function trigger_build_on_dockerhub () {
-	 curl -H "Content-Type: application/json" --data '{"source_type": "Tag", "source_name": "v0.1.13"}' -X POST https://registry.hub.docker.com/u/dj4ngo/alpine-rpi/trigger/${DOCKERHUB_TOKEN}/
+	 curl -q -H "Content-Type: application/json" --data '{"source_type": "Tag", "source_name": "v0.1.13", "docker_tag": "0.1.13"}' -X POST https://registry.hub.docker.com/u/dj4ngo/alpine-rpi/trigger/${DOCKERHUB_TOKEN}/
 }
 
 function mr_proper () {
