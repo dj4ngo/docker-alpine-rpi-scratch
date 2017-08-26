@@ -61,13 +61,10 @@ function create_arbo () {
 }
 
 function get_apk_static () {
-	
 	echo "-> Install apk.static for $(uname -m)"
 	apk_version=$(curl -s $REPO/$(uname -m)/APKINDEX.tar.gz | tar -Oxz | sed -n '/apk-tools-static/{n;s/V://p}')
 	echo "---> APK version=$apk_version"
-	#curl -s ${REPO}/$(uname -m)/apk-tools-static-${apk_version}.apk | tar -xz -C $TMP_DIR sbin/apk.static 
-	curl -s ${REPO}/$ARCH/apk-tools-static-${apk_version}.apk | tar -xz -C $TMP_DIR sbin/apk.static 
-	
+	curl -s ${REPO}/$(uname -m)/apk-tools-static-${apk_version}.apk | tar -xz -C $TMP_DIR sbin/apk.static 
 }
 
 
@@ -90,18 +87,18 @@ function install_resin-xbuild () {
 	
 	echo "-> Install resin-xbuild"
 	echo "---> Create /usr/bin and /bin"
-	mkdir -p $TMP_ROOTFS/{usr/,}bin
+	mkdir -p $TMP_ROOTFS/{,usr/}bin
 
 	echo "---> Copy resin-xbuild binary"
 	cp ${TMP_DIR}/resin-xbuild/resin-xbuild $TMP_ROOTFS/usr/bin
 
 	echo "---> Create sh.real"
-	ln -s /bin/busybox $TMP_ROOTFS/bin/sh
+	ln -sf /bin/busybox $TMP_ROOTFS/bin/sh.real
 
 	echo "---> Create crossbuild start and end links"
 	
-	ln -s resin-xbuild $TMP_ROOTFS/usr/bin/cross-build-end
-	ln -s resin-xbuild $TMP_ROOTFS/usr/bin/cross-build-start
+	ln -sf resin-xbuild $TMP_ROOTFS/usr/bin/cross-build-end
+	ln -sf resin-xbuild $TMP_ROOTFS/usr/bin/cross-build-start
 
 
 	echo "---> Create sh and sh-shim"
@@ -118,18 +115,20 @@ EOF
 	cp $(which qemu-arm-static) $TMP_ROOTFS/usr/bin/
 
 	echo "---> Set erveything executable"
-	chmod +x $TMP_ROOTFS/bin/sh* $TMP_ROOTFS/usr/bin/*
-	
+	chmod +x $TMP_ROOTFS/bin/sh{,-shim} $TMP_ROOTFS/usr/bin/*
 }
 
 function install_rootfs () {
-	
 	echo "-> Install root FS"
-	qemu-arm-static  ${TMP_DIR}/sbin/apk.static -v --arch $ARCH --repository $REPO --update-cache --root $TMP_ROOTFS --initdb add alpine-base --allow-untrusted --purge --no-progress
+	cp ${TMP_DIR}/sbin/apk.static $TMP_ROOTFS/usr/bin/apk.static.$(uname -m)
+	mkdir $TMP_ROOTFS/etc/
+	cp /etc/resolv.conf $TMP_ROOTFS/etc/
+	chroot $TMP_ROOTFS /usr/bin/apk.static.$(uname -m) -v --arch $ARCH --repository $REPO --update-cache --root / --initdb add alpine-base ca-certificates --allow-untrusted --purge --no-progress
 	echo "-> Configure repository"
 	echo "$REPO" > $TMP_ROOTFS/etc/apk/repositories
-	
-
+	# restore /bin/sh
+	rm $TMP_ROOTFS/bin/sh $TMP_ROOTFS/etc/resolv.conf
+	ln -sf /bin/busybox $TMP_ROOTFS/bin/sh
 }
 
 function generate_rootfstgz () {
