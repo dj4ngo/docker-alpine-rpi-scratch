@@ -1,0 +1,13 @@
+#!/x86_64/qemu-arm-static /x86_64/sh
+
+set -o errexit
+
+# restore real sh during execution of command
+cp -d /x86_64/sh.real /bin/sh
+
+#execute command 
+/bin/sh "$@"
+
+# restore sh-shim
+cp /x86_64/sh-shim /bin/sh
+

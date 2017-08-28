@@ -1,0 +1,8 @@
+#!/x86_64/qemu-arm-static /bin/sh
+
+# in our case /x86_64/sh is a symlink to busybox since it must have $0 equal to sh
+# save /bin/sh real to be able to restore it 
+mv /bin/sh /x86_64/sh.real
+
+# replace /bin/sh by sh-shim 
+cp /x86_64/sh-shim /bin/sh

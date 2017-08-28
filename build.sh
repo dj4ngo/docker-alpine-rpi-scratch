@@ -83,52 +83,37 @@ function compile_resin-xbuild () {
 	popd
 }
 
-function install_resin-xbuild () {
+function install_xbuild () {
 	
 	echo "-> Install resin-xbuild"
 	echo "---> Create /usr/bin and /bin"
 	mkdir -p $TMP_ROOTFS/{,usr/}bin
 
 	echo "---> Copy resin-xbuild binary"
-	cp ${TMP_DIR}/resin-xbuild/resin-xbuild $TMP_ROOTFS/usr/bin
+	cp -rd x86_64 $TMP_ROOTFS/
 
-	echo "---> Create sh.real"
-	ln -sf /bin/busybox $TMP_ROOTFS/bin/sh.real
+	echo "---> Create temporary /usr/bin/sh for first install"
+	# in $PATH, /usr/bin is before /bin so when apk will install /bin/sh
+	# my modified one will be used instead
+	cp -d x86_64/sh-resin $TMP_ROOTFS/usr/bin/
 
-	echo "---> Create crossbuild start and end links"
-	
-	ln -sf resin-xbuild $TMP_ROOTFS/usr/bin/cross-build-end
-	ln -sf resin-xbuild $TMP_ROOTFS/usr/bin/cross-build-start
-
-
-	echo "---> Create sh and sh-shim"
-	cat <<EOF | tee $TMP_ROOTFS/bin/sh > $TMP_ROOTFS/bin/sh-shim
-#!/usr/bin/qemu-arm-static /bin/sh
-
-set -o errexit
-
-cp /bin/sh.real /bin/sh  
-/bin/sh "$@"
-cp /usr/bin/sh-shim /bin/sh
-EOF
 	echo "---> Copy qemu-arm-static"
-	cp $(which qemu-arm-static) $TMP_ROOTFS/usr/bin/
+	cp $(which qemu-arm-static) $TMP_ROOTFS/x86_64/
 
 	echo "---> Set erveything executable"
-	chmod +x $TMP_ROOTFS/bin/sh{,-shim} $TMP_ROOTFS/usr/bin/*
+	chmod +x $TMP_ROOTFS/x86_64/{cross-build-end,cross-build-start,sh-shim}
 }
 
 function install_rootfs () {
 	echo "-> Install root FS"
-	cp ${TMP_DIR}/sbin/apk.static $TMP_ROOTFS/usr/bin/apk.static.$(uname -m)
+	cp ${TMP_DIR}/sbin/apk.static $TMP_ROOTFS/x86_64/apk.static
 	mkdir $TMP_ROOTFS/etc/
 	cp /etc/resolv.conf $TMP_ROOTFS/etc/
-	chroot $TMP_ROOTFS /usr/bin/apk.static.$(uname -m) -v --arch $ARCH --repository $REPO --update-cache --root / --initdb add alpine-base ca-certificates --allow-untrusted --purge --no-progress
+	chroot $TMP_ROOTFS /x86_64/apk.static -v --arch $ARCH --repository $REPO --update-cache --root / --initdb add alpine-base ca-certificates --allow-untrusted --purge --no-progress
 	echo "-> Configure repository"
 	echo "$REPO" > $TMP_ROOTFS/etc/apk/repositories
-	# restore /bin/sh
-	rm $TMP_ROOTFS/bin/sh $TMP_ROOTFS/etc/resolv.conf
-	ln -sf /bin/busybox $TMP_ROOTFS/bin/sh
+	# clean env and remove temporary /usr/bin/sh
+	rm $TMP_ROOTFS/usr/bin/sh $TMP_ROOTFS/etc/resolv.conf
 }
 
 function generate_rootfstgz () {
@@ -201,9 +186,9 @@ function local_build () {
 	install_dep
 	create_arbo
 	get_apk_static
-	get_resin-xbuild
-	compile_resin-xbuild
-	install_resin-xbuild
+	#get_resin-xbuild
+	#compile_resin-xbuild
+	install_xbuild
 	install_rootfs
 	generate_rootfstgz
 	mr_proper
