@@ -45,7 +45,7 @@ function install_dep () {
 	
 	echo "-> Install dependencies for build"
 	apt-get update -qq
-	apt-get install -y  curl golang qemu-user-static docker
+	apt-get install -y  curl qemu-user-static docker
 	
 }
 
@@ -68,20 +68,20 @@ function get_apk_static () {
 }
 
 
-function get_resin-xbuild () {
-	echo "---> Get resin-xbuild from https://github.com/resin-io-projects/armv7hf-debian-qemu"
-	mkdir -p ${TMP_DIR}/resin-xbuild
-	pushd ${TMP_DIR}/resin-xbuild
-	curl -s "https://raw.githubusercontent.com/resin-io-projects/armv7hf-debian-qemu/master/resin-xbuild.go" -o resin-xbuild.go
-	popd
-}
-
-function compile_resin-xbuild () {
-	echo "-> Compile resin-xbuild"
-	pushd ${TMP_DIR}/resin-xbuild
-	go build -ldflags "-w -s" resin-xbuild.go
-	popd
-}
+#function get_resin-xbuild () {
+#	echo "---> Get resin-xbuild from https://github.com/resin-io-projects/armv7hf-debian-qemu"
+#	mkdir -p ${TMP_DIR}/resin-xbuild
+#	pushd ${TMP_DIR}/resin-xbuild
+#	curl -s "https://raw.githubusercontent.com/resin-io-projects/armv7hf-debian-qemu/master/resin-xbuild.go" -o resin-xbuild.go
+#	popd
+#}
+#
+#function compile_resin-xbuild () {
+#	echo "-> Compile resin-xbuild"
+#	pushd ${TMP_DIR}/resin-xbuild
+#	go build -ldflags "-w -s" resin-xbuild.go
+#	popd
+#}
 
 function install_xbuild () {
 	
@@ -92,16 +92,17 @@ function install_xbuild () {
 	echo "---> Copy resin-xbuild binary"
 	cp -rd x86_64 $TMP_ROOTFS/
 
-	echo "---> Create temporary /usr/bin/sh for first install"
-	# in $PATH, /usr/bin is before /bin so when apk will install /bin/sh
-	# my modified one will be used instead
-	cp -d x86_64/sh-resin $TMP_ROOTFS/usr/bin/
+#	echo "---> Create temporary /usr/bin/sh for first install"
+#	# in $PATH, /usr/bin is before /bin so when apk will install /bin/sh
+#	# my modified one will be used instead
+#	cp -d x86_64/sh-install $TMP_ROOTFS/bin/sh
 
 	echo "---> Copy qemu-arm-static"
 	cp $(which qemu-arm-static) $TMP_ROOTFS/x86_64/
 
 	echo "---> Set erveything executable"
-	chmod +x $TMP_ROOTFS/x86_64/{cross-build-end,cross-build-start,sh-shim}
+#	chmod +x $TMP_ROOTFS/x86_64/{cross-build-end,cross-build-start,sh-shim}
+	chmod +x -f $TMP_ROOTFS/x86_64/*
 }
 
 function install_rootfs () {
@@ -109,7 +110,8 @@ function install_rootfs () {
 	cp ${TMP_DIR}/sbin/apk.static $TMP_ROOTFS/x86_64/apk.static
 	mkdir $TMP_ROOTFS/etc/
 	cp /etc/resolv.conf $TMP_ROOTFS/etc/
-	chroot $TMP_ROOTFS /x86_64/apk.static -v --arch $ARCH --repository $REPO --update-cache --root / --initdb add alpine-base ca-certificates --allow-untrusted --purge --no-progress
+	#strace chooot $TMP_ROOTFS /x86_64/apk.static -v --arch $ARCH --repository $REPO --update-cache --root / --initdb add alpine-base ca-certificates --allow-untrusted --purge --no-progress
+	chroot $TMP_ROOTFS /x86_64/apk.static -vv --arch $ARCH --repository $REPO --update-cache --root / --initdb add alpine-base ca-certificates --allow-untrusted --purge --no-progress
 	echo "-> Configure repository"
 	echo "$REPO" > $TMP_ROOTFS/etc/apk/repositories
 	# clean env and remove temporary /usr/bin/sh
@@ -183,7 +185,7 @@ function mr_proper () {
 
 ### MAIN ###
 function local_build () {
-	install_dep
+	#install_dep
 	create_arbo
 	get_apk_static
 	#get_resin-xbuild
