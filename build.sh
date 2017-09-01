@@ -156,7 +156,7 @@ EOF
 
 function trigger_build_on_dockerhub () {
 	# curl -q -H "Content-Type: application/json" --data '{"source_type": "Tag", "source_name": "v0.1.13", "docker_tag": "0.1.13"}' -X POST https://registry.hub.docker.com/u/dj4ngo/alpine-rpi/trigger/${DOCKERHUB_TOKEN}/
-	# curl -H "Content-Type: application/json" --data '{"source_type": "Tag", "source_name": "v0.1.21"}' -X POST https://registry.hub.docker.com/u/dj4ngo/alpine-rpi/trigger/${DOCKERHUB_TOKEN}/
+	# curl -H "Content-Type: application/json" --data '{"source_type": "Tag", "source_name": "v0.1.22"}' -X POST https://registry.hub.docker.com/u/dj4ngo/alpine-rpi/trigger/${DOCKERHUB_TOKEN}/
  	:
 }
 
