@@ -68,21 +68,6 @@ function get_apk_static () {
 }
 
 
-#function get_resin-xbuild () {
-#	echo "---> Get resin-xbuild from https://github.com/resin-io-projects/armv7hf-debian-qemu"
-#	mkdir -p ${TMP_DIR}/resin-xbuild
-#	pushd ${TMP_DIR}/resin-xbuild
-#	curl -s "https://raw.githubusercontent.com/resin-io-projects/armv7hf-debian-qemu/master/resin-xbuild.go" -o resin-xbuild.go
-#	popd
-#}
-#
-#function compile_resin-xbuild () {
-#	echo "-> Compile resin-xbuild"
-#	pushd ${TMP_DIR}/resin-xbuild
-#	go build -ldflags "-w -s" resin-xbuild.go
-#	popd
-#}
-
 function install_xbuild () {
 	
 	echo "-> Install resin-xbuild"
@@ -184,8 +169,6 @@ function local_build () {
 	install_dep
 	create_arbo
 	get_apk_static
-	#get_resin-xbuild
-	#compile_resin-xbuild
 	install_xbuild
 	install_rootfs
 	generate_rootfstgz

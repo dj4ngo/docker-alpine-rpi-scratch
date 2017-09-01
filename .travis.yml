@@ -10,11 +10,9 @@ before_install:
 install:
   - sudo ./build.sh create_arbo
   - sudo ./build.sh get_apk_static
-  - sudo ./build.sh get_resin-xbuild
 
 script:
-  - sudo ./build.sh compile_resin-xbuild
-  - sudo ./build.sh install_resin-xbuild
+  - sudo ./build.sh install_xbuild
   - sudo ./build.sh install_rootfs
   - sudo ./build.sh generate_rootfstgz
   - sudo ./build.sh test_docker_build
