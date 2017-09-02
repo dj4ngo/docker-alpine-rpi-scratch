@@ -84,7 +84,7 @@ function install_xbuild () {
 	ln -sf /x86_64/qemu-arm-static $TMP_ROOTFS/usr/bin/
 
 	echo "---> Set erveything executable"
-	chmod +x -f $TMP_ROOTFS/x86_64/*
+	chmod +x -f $TMP_ROOTFS/x86_64/{cross-build-end,cross-build-start,sh-shim}
 }
 
 function install_rootfs () {
@@ -175,7 +175,7 @@ if [ -z "$func_name" ]; then
 	$0 install_xbuild
 	$0 install_rootfs
 	$0 generate_rootfstgz
-	$0 mr_proper
+#	$0 mr_proper
 	$0 local_docker_build $TAG	
 	$0 test_docker_build
 	$0 test_docker_use_img
