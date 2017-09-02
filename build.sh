@@ -95,7 +95,7 @@ function install_rootfs () {
 	chroot $TMP_ROOTFS /x86_64/apk.static -v --arch $ARCH --repository $REPO --update-cache --root / --initdb add alpine-base ca-certificates --allow-untrusted --purge --no-progress
 	echo "-> Configure repository"
 	echo "$REPO" > $TMP_ROOTFS/etc/apk/repositories
-	# clean env and remove temporary /usr/bin/sh
+	# clean 
 	rm $TMP_ROOTFS/etc/resolv.conf
 }
 
@@ -165,24 +165,21 @@ function mr_proper () {
 }
 
 ### MAIN ###
-function local_build () {
-	install_dep
-	create_arbo
-	get_apk_static
-	install_xbuild
-	install_rootfs
-	generate_rootfstgz
-	mr_proper
-	local_docker_build $TAG	
-	test_docker_build
-	test_docker_use_img
-}
-
-
 
 available_functions="$(typeset -F | sed -n 's/^declare -f \([^_].*\)/\1/p')"
 func_name="$1"
-if [ -z "$func_name" ]; then usage; fi
+if [ -z "$func_name" ]; then
+	$0 install_dep
+	$0 create_arbo
+	$0 get_apk_static
+	$0 install_xbuild
+	$0 install_rootfs
+	$0 generate_rootfstgz
+	$0 mr_proper
+	$0 local_docker_build $TAG	
+	$0 test_docker_build
+	$0 test_docker_use_img
+fi
 shift
 args="${@}"
 
