@@ -1,0 +1,6 @@
+#!/x86_64/busybox sh
+
+
+/x86_64/busybox sh -c "${@}"
+
+
