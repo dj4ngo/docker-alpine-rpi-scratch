@@ -90,18 +90,23 @@ function install_xbuild () {
 function install_rootfs () {
 	echo "-> Install root FS"
 	cp ${TMP_DIR}/sbin/apk.static $TMP_ROOTFS/x86_64/apk.static
-	mkdir $TMP_ROOTFS/etc/
-	cp /etc/resolv.conf $TMP_ROOTFS/etc/
-	chroot $TMP_ROOTFS /x86_64/apk.static -v --arch $ARCH --repository $REPO --update-cache --root / --initdb add alpine-base ca-certificates --allow-untrusted --purge --no-progress
+	mkdir -p $TMP_ROOTFS/etc/apk
+	
 	echo "-> Configure repository"
 	echo "$REPO" > $TMP_ROOTFS/etc/apk/repositories
+	
+	echo "-> Copy temporarly resolv.conf"
+	cp /etc/resolv.conf $TMP_ROOTFS/etc/
+
+
+	chroot $TMP_ROOTFS /x86_64/apk.static -v --arch $ARCH --update-cache --root / --initdb add alpine-base ca-certificates --allow-untrusted --purge --no-progress
 	# clean 
 	rm $TMP_ROOTFS/etc/resolv.conf
 }
 
 function generate_rootfstgz () {
 	echo "-> Create alpine rootfs.tgz"
-	tar --numeric-owner -C $TMP_ROOTFS -zcf ${BUILD_PATH}/rootfs.tgz .
+	tar -C $TMP_ROOTFS -zcf ${BUILD_PATH}/rootfs.tgz .
 
 }
 
