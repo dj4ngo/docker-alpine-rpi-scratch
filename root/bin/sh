@@ -1,6 +1,10 @@
 #!/x86_64/busybox sh
 
+set -x 
 
-/x86_64/busybox sh -c "${@}"
+#remove -c from sh -c docker build call
+#shift 
+
+/x86_64/busybox sh "${@}"
 
 
