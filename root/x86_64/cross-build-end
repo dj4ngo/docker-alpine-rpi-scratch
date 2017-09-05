@@ -1,0 +1,5 @@
+#!/x86_64/qemu-arm-static /x86_64/sh
+
+# restore /bin/sh real 
+mv /x86_64/sh.real /bin/sh
+
